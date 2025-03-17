@@ -2,7 +2,7 @@ import fitz  # PyMuPDF
 import pandas as pd
 
 # Load the PDF
-pdf_path = "KLAS-report-2025-best-in-klas-awards-software-and-services-full (1).pdf"
+pdf_path = "C:\Users\jmhonel\Downloads\KLAS-report-2025-best-in-klas-awards-software-and-services-full (1).pdf"
 doc = fitz.open(pdf_path)
 
 # Define the starting page for the index
