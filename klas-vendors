@@ -1,0 +1,36 @@
+import fitz  # PyMuPDF
+import pandas as pd
+
+# Load the PDF
+pdf_path = "KLAS-report-2025-best-in-klas-awards-software-and-services-full (1).pdf"
+doc = fitz.open(pdf_path)
+
+# Define the starting page for the index
+start_page = 273  # Adjust if needed
+vendors = []
+
+# Extract text from the index pages
+for page_num in range(start_page - 1, len(doc)):  # Page numbers are 0-based
+    page = doc[page_num]
+    text = page.get_text("text")
+
+    # Process text line by line
+    for line in text.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+        
+        # Assuming vendor names are in bold or capitalized
+        if ":" in line:  # Vendor-product separator
+            vendor, product = map(str.strip, line.split(":", 1))
+            vendors.append((vendor, product))
+        else:
+            # Might be part of a multi-line product description
+            if vendors:
+                vendors[-1] = (vendors[-1][0], vendors[-1][1] + " " + line)
+
+# Save to CSV
+df = pd.DataFrame(vendors, columns=["Vendor", "Product"])
+df.to_csv("vendors_products.csv", index=False)
+
+print("Extraction complete! Data saved to vendors_products.csv")
